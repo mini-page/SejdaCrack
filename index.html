@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SejdaCrack Documentation - mini-page Utility</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    /* Custom Scrollbar for a subtle dark theme experience */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
+    }
+
+    /* Custom style for the copy button container */
+    .copy-container {
+      position: relative;
+    }
+
+    /* Fix for long code lines in pre blocks */
+    .code-wrap {
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+  </style>
+
+</head>
+
+<body class="bg-gray-950 text-gray-200 font-sans">
+
+  <!-- NAVBAR -->
+  <header class="border-b border-gray-800 bg-gray-900 sticky top-0 z-50 shadow-2xl">
+    <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
+      <div class="text-xl font-bold tracking-widest">
+        <span class="text-red-500">Sejda</span><span class="text-indigo-500">Crack <a href="#about"
+            class="hover:text-white transition duration-300"><i class="fa-solid fa-info-circle text-sm"></i></a></span>
+      </div>
+
+      <nav class="space-x-8 text-gray-300 hidden sm:block">
+        <a href="#install" class="hover:text-white transition duration-300">Get Started <i
+            class="fa-solid fa-bolt"></i></a>
+        <a href="#readme" class="hover:text-white transition duration-300">README <i class="fa-solid fa-file"></i></a>
+        <a href="#author" class="hover:text-white transition duration-300" title="Author Profile"><i
+            class="fa-brands fa-github"></i></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="py-20 bg-gradient-to-br from-black via-gray-900 to-black border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+      <div>
+        <h1 class="text-6xl font-extrabold mb-6 leading-tight">
+          The Simplified <br>
+          <span class="text-red-500">PDF Tool</span> <span class="text-indigo-500">Utility</span>
+        </h1>
+        <p class="text-xl text-gray-400 max-w-xl">
+          A utility to potentially bypass or manage premium features of the Sejda PDF Desktop application.
+        </p>
+
+        <div class="mt-8 flex gap-4">
+          <a href="https://github.com/mini-page/SejdaCrack" target="_blank"
+            class="px-7 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-bold shadow-lg shadow-indigo-500/30 transition duration-300 transform hover:scale-[1.02]">
+            <i class="fa-brands fa-github mr-2"></i> View Repository
+          </a>
+          <a href="#install"
+            class="px-7 py-3 border border-gray-600 hover:bg-gray-800/70 rounded-lg font-bold transition duration-300">
+            <i class="fa-solid fa-bolt mr-2"></i> Get Started
+          </a>
+        </div>
+        <em class="text-sm text-yellow-500 mt-4 block">For authorized use and educational purposes only.</em>
+      </div>
+
+      <!-- Core Highlights Block -->
+      <div class="bg-gray-900/60 border border-gray-700/50 rounded-xl p-8 shadow-2xl space-y-4">
+        <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-indigo-400">
+          Core Highlights
+        </h3>
+        <ul class="space-y-3 text-gray-300">
+          <li class="flex items-center"><i class="fa-solid fa-puzzle-piece text-indigo-500 w-5 mr-3"></i> Modular Bypass
+            Logic</li>
+          <li class="flex items-center"><i class="fa-solid fa-laptop-code text-indigo-500 w-5 mr-3"></i> Cross-Platform
+            Concept (Python)</li>
+          <li class="flex items-center"><i class="fa-solid fa-lock-open text-red-500 w-5 mr-3"></i> Focus on PDF
+            Limitations</li>
+          <li class="flex items-center"><i class="fa-solid fa-user-lock text-indigo-500 w-5 mr-3"></i> Developer Focused
+            on Ethics</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ABOUT & FEATURES -->
+  <section id="about" class="py-16 max-w-6xl mx-auto px-6">
+    <h2
+      class="text-4xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 border-b border-gray-800 pb-3">
+      About <span class="text-indigo-500">SejdaCrack</span></h2>
+    <p class="text-gray-400 leading-relaxed text-lg max-w-4xl">
+      "SejdaCrack" is a technical project by <a href="https://github.com/mini-page"
+        class="text-yellow-400">mini-page</a> intended to explore the mechanics behind software licensing
+      and feature restrictions in the Sejda PDF Desktop application. It serves as a prime example of reverse engineering
+      for educational purposes, demonstrating how utilities can interact with a system's application files to modify
+      behavior for authorized security assessment.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-8 mt-12">
+      <div
+        class="border border-gray-800 p-6 rounded-lg bg-gray-900 shadow-xl hover:border-indigo-600 transition duration-300 transform hover:translate-y-[-2px]">
+        <i class="fa-solid fa-magnifying-glass-chart text-red-500 text-3xl mb-3"></i>
+        <h3 class="font-bold text-xl">Reverse Engineering</h3>
+        <p class="text-gray-400 mt-2">Core of the project lies in understanding application binary logic and file
+          structure.</p>
+      </div>
+
+      <div
+        class="border border-gray-800 p-6 rounded-lg bg-gray-900 shadow-xl hover:border-indigo-600 transition duration-300 transform hover:translate-y-[-2px]">
+        <i class="fa-solid fa-file-pdf text-indigo-500 text-3xl mb-3"></i>
+        <h3 class="font-bold text-xl">PDF Utility Focus</h3>
+        <p class="text-gray-400 mt-2">Specifically targets premium restrictions within the Sejda PDF Suite. Python
+          ensures cross-platform potential.</p>
+      </div>
+
+      <div
+        class="border border-gray-800 p-6 rounded-lg bg-gray-900 shadow-xl hover:border-indigo-600 transition duration-300 transform hover:translate-y-[-2px]">
+        <i class="fa-solid fa-flask text-green-500 text-3xl mb-3"></i>
+        <h3 class="font-bold text-xl">Educational PoC</h3>
+        <p class="text-gray-400 mt-2">A practical lesson in cybersecurity, application structure, and ethical patching
+          techniques.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALLATION (Updated with detailed Steps and Visuals) -->
+  <section id="install" class="py-16 bg-gray-900 border-t border-b border-gray-800">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2
+        class="text-4xl font-extrabold mb-8 flex items-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-indigo-400">
+        <i class="fa-solid fa-rocket mr-3 text-red-500"></i> Getting Started / Installation
+      </h2>
+
+
+      <div class="p-8 rounded-xl bg-black/50 border border-gray-700 shadow-2xl space-y-10">
+
+        <!-- Prerequisites - IMPROVED -->
+        <div>
+          <h3 class="text-2xl font-semibold mb-5 text-indigo-400 border-b border-gray-800 pb-2 flex items-center"><i
+              class="fa-solid fa-list-check mr-2 text-xl"></i> 1. Prerequisites</h3>
+          <ul class="list-disc ml-8 text-gray-300 space-y-3">
+            <li>
+              <i class="fa-brands fa-python text-yellow-500 mr-2"></i>
+              Latest version of <span class="font-bold">Python</span>: Ensure you have Python installed.
+              <a href="https://www.python.org/downloads/" target="_blank"
+                class="text-blue-400 hover:underline font-medium">Download Python</a>.
+            </li>
+            <li>
+              <i class="fa-solid fa-file-pdf text-red-500 mt-1 mr-2 flex-shrink-0"></i>
+              A clean <strong> Sejda PDF Desktop </strong> application installation.
+              <a href="https://www.sejda.com/desktop" target="_blank"
+                class="text-blue-400 hover:underline font-medium ml-2">Download Sejda</a>.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Crucial Step - IMPROVED -->
+        <div class="p-4 bg-gray-950 rounded-lg border border-yellow-800/50 flex items-center shadow-lg">
+          <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-2xl mr-4 flex-shrink-0"></i>
+          <div>
+            <span class="font-semibold text-white block text-lg mb-1">Crucial Initialization Step:</span>
+            <p class="text-gray-300">
+              Open the Sejda Desktop application at least once to allow it to fully initialize its local files and
+              permissions. **Then, ensure the application is closed completely before running the utility.**
+            </p>
+          </div>
+        </div>
+
+        <!-- Verification/Easy Install - IMPROVED CODE WRAPPING -->
+        <div>
+          <h3 class="text-2xl font-semibold mb-5 text-indigo-400 border-b border-gray-800 pb-2 flex items-center"><i
+              class="fa-solid fa-bolt mr-2 text-xl"></i> 2. Quick Install (PowerShell)</h3>
+          <p class="text-gray-400 mb-4">You can verify your Python setup or use the single-line PowerShell command for
+            automated, fast setup:</p>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Python Verify -->
+            <div class="bg-gray-800 p-4 rounded-lg copy-container">
+              <p class="text-sm font-medium text-white mb-2">Verify Python Installation (CMD/PowerShell):</p>
+              <pre class="bg-black text-green-400 p-3 rounded-md overflow-x-auto text-sm code-wrap"
+                id="code1">python --version</pre>
+              <button onclick="copyCode('code1', this)"
+                class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded-md"><i
+                  class="fa-regular fa-copy"></i></button>
+            </div>
+            <!-- Quick Install -->
+            <div class="bg-gray-800 p-4 rounded-lg copy-container">
+              <p class="text-sm font-medium text-white mb-2">Automated Install/Run Script (PowerShell):</p>
+              <pre class="bg-black text-yellow-400 p-3 rounded-md overflow-x-auto text-sm code-wrap"
+                id="code2">irm https://raw.githubusercontent.com/mini-page/SejdaCrack/main/install.ps1 | iex</pre>
+              <button onclick="copyCode('code2', this)"
+                class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded-md"><i
+                  class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manual Steps -->
+        <div>
+          <h3 class="text-2xl font-semibold mb-5 text-indigo-400 border-b border-gray-800 pb-2 flex items-center"><i
+              class="fa-solid fa-code-branch mr-2 text-xl"></i> 3. Manual Clone & Run</h3>
+
+          <ol class="list-decimal ml-6 space-y-4 text-gray-300">
+            <li>
+              <span class="font-semibold text-white">Download Script:</span>
+              Download <code class="bg-gray-800 p-1 rounded text-red-400">sejda_crack.py</code> and save it in a working
+              directory.
+            </li>
+            <li>
+              <span class="font-semibold text-white">Open PowerShell as Administrator.</span>
+            </li>
+            <li>
+              <span class="font-semibold text-white">Navigate to the script directory:</span>
+              <div class="mt-1 copy-container">
+                <pre class="bg-gray-900 text-blue-400 p-3 rounded-md overflow-x-auto text-sm code-wrap"
+                  id="code3">cd C:\Users\YourName\Documents\scripts</pre>
+                <button onclick="copyCode('code3', this)"
+                  class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded-md"><i
+                    class="fa-regular fa-copy"></i></button>
+              </div>
+            </li>
+            <li>
+              <span class="font-semibold text-white">Execute the script:</span>
+              <div class="mt-1 copy-container">
+                <pre class="bg-gray-900 text-green-400 p-3 rounded-md overflow-x-auto text-sm code-wrap"
+                  id="code4">python sejda_crack.py</pre>
+                <button onclick="copyCode('code4', this)"
+                  class="absolute top-2 right-2 text-gray-400 hover:text-white transition duration-200 p-1 rounded-md"><i
+                    class="fa-regular fa-copy"></i></button>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+      </div>
+
+      <!-- Educational Note -->
+      <p
+        class="text-yellow-400 mt-8 text-lg flex items-center justify-center p-4 border border-yellow-700/50 rounded-lg bg-yellow-950/40 shadow-inner">
+        <i class="fa-solid fa-graduation-cap mr-3 text-yellow-300 text-xl"></i>
+        **Educational Use Only:** Created by a student for authorized, ethical study of application security and reverse
+        engineering. 💖
+      </p>
+    </div>
+  </section>
+
+  <!-- README CONTENT (Updated for Python Script Mechanism) -->
+  <section id="readme" class="py-16 bg-gray-900 border-t border-b border-gray-800">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2
+        class="text-4xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-indigo-400">
+        <i class="fa-solid fa-book-open text-red-500 mr-3"></i> Full Project README
+      </h2>
+
+      <div class="space-y-8">
+
+        <!-- Section: Overview -->
+        <div class="p-6 rounded-xl bg-black/50 border border-gray-800 shadow-md">
+          <h3 class="text-2xl font-semibold mb-4 text-indigo-400">Project Overview</h3>
+          <p class="text-gray-400">
+            This repository presents the "SejdaCrack Utility". It is a proof-of-concept demonstrating a method to
+            override or manage certain premium restrictions found in the Sejda PDF Desktop application.
+            <br><br>
+            <span class="font-semibold text-white">Core Mechanism:</span> The utility is an isolated Python script
+            (<code class="bg-gray-800 p-1 rounded text-red-400">sejda_crack.py</code>) designed to identify and
+            overwrite or manipulate key application files with custom patches. The **<code
+              class="bg-gray-800 p-1 rounded text-red-400">install.ps1</code>** file is a convenience script for
+            automated setup on Windows.
+          </p>
+        </div>
+
+        <!-- Section: Disclaimer -->
+        <div class="p-6 rounded-xl bg-red-900/40 border border-red-700 shadow-xl">
+          <h3 class="text-2xl font-bold mb-4 flex items-center text-red-300"><i
+              class="fa-solid fa-triangle-exclamation mr-3 text-2xl"></i> Important Disclaimer</h3>
+          <p class="text-red-200">
+            This utility is provided for **educational purposes** only to study software licensing and security
+            mechanisms. You must have prior authorization to run this against any asset. The developer assumes you are
+            acting in good faith as a security professional or authorized student.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- DEVELOPER / PROMOTION -->
+  <section id="author" class="py-16 bg-black border-t border-gray-800">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10">
+
+      <div>
+        <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+          Created by: mini-page</h2>
+        <p class="text-gray-400 mt-4 leading-relaxed max-w-lg text-lg">
+          <a href="https://github.com/mini-page" class="text-yellow-400">mini-page</a> is a developer focused on the
+          intersection of UI/UX, cybersecurity, automation, and system
+          scripting. This project is one of many in their portfolio showcasing technical depth.
+        </p>
+
+        <a href="https://github.com/mini-page" target="_blank"
+          class="inline-block mt-6 px-7 py-3 bg-red-600 hover:bg-red-500 rounded-lg font-bold transition duration-300 shadow-lg shadow-red-500/30 transform hover:scale-[1.02]">
+          <i class="fa-brands fa-github mr-2"></i> Visit mini-page Profile
+        </a>
+      </div>
+
+      <div class="border border-indigo-700 p-6 rounded-xl bg-gray-900 shadow-2xl">
+        <h3 class="text-2xl font-bold mb-4 text-indigo-400 flex items-center"><i class="fa-solid fa-heart mr-2"></i>
+          Check Out Another Project</h3>
+
+        <p class="text-gray-300 text-lg">
+          <a class="text-yellow-400 font-bold" href="https://the-secret-juice.vercel.app/">TheSecretJuice</a>: –
+          PowerShell steroids for your favorite command-line tools, before the steroid, you need to download those
+          muscles
+        </p>
+
+        <a href="https://the-secret-juice.vercel.app/" target="_blank"
+          class="inline-block mt-4 text-yellow-400 font-medium underline hover:text-yellow-300 transition duration-300 text-lg">
+          <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Visit TheSecretJuice
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- JavaScript for Copy-to-Clipboard Functionality -->
+  <script>
+    function copyCode(elementId, button) {
+      let codeBlock = document.getElementById(elementId);
+      let textToCopy = codeBlock.innerText.trim();
+
+      // Find and strip comment lines starting with # or // (for pre blocks)
+      textToCopy = textToCopy.split('\n').filter(line => !line.trim().startsWith('#') && !line.trim().startsWith('//')).join('\n').trim();
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        // Change button icon to success icon temporarily
+        let originalIcon = button.innerHTML;
+        button.innerHTML = '<i class="fa-solid fa-check text-green-400"></i>';
+
+        setTimeout(() => {
+          button.innerHTML = originalIcon;
+        }, 1500);
+      }).catch(err => {
+        console.error('Could not copy text: ', err);
+        // Fallback for older browsers or failed attempts
+        alert('Failed to copy, please copy manually: ' + textToCopy);
+      });
+    }
+  </script>
+
+</body>
+
+</html>
