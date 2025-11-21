@@ -20,7 +20,7 @@ class SejdaCrack:
         self.main()
 
     def main(self):
-        self.print("🔥", f"Sejda PDF Desktop crack v{VERSION} by rg")
+        self.print("🔥", f"Sejda PDF Desktop crack v{VERSION} by mini-page")
 
         if self.platform == "linux":
             self.asar = "/opt/sejda-desktop/resources/app.asar"
@@ -53,8 +53,8 @@ class SejdaCrack:
         self.check_version()
         self.check_process()
         self.patch_files()
-        self.print("🎉", "Cracked successful")
-        self.print("⭐", "Would appreciate a star https://github.com/mini-page")
+        self.print("🎉", "Freedom successful")
+        self.print("⭐", "Would appreciate a star https://github.com/mini-page/SejdaCrack")
 
     @staticmethod
     def home_dir():
