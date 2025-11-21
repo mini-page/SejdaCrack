@@ -2,8 +2,9 @@
 
 ### Prerequisites
 
-* Latest version of **Python**
-* A **Sejda PDF desktop application** installed on your system
+
+- Latest version of **Python**: https://www.python.org/downloads/
+- A **Sejda PDF Desktop application**: https://www.sejda.com/desktop
 
 > Open Sejda desktop at least once and allow all required permissions so it can initialize properly. Then close it completely.
 
