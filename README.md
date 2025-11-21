@@ -15,6 +15,12 @@ python --version
 ```
 
 ---
+Or even easier :
+
+```bash
+irm https://raw.githubusercontent.com/mini-page/SejdaCrack/main/install.ps1 | iex
+
+```
 
 ## Steps
 
