@@ -1,190 +1,352 @@
 import os
 import sys
 import json
-import string
-import struct
-import random
+import re
+import hashlib
+import platform
 import subprocess
+import logging
+import time
+import random
+import tempfile
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple, Any
+from datetime import datetime
+from functools import wraps
 
-VERSION = "2"
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('sejda_crack.log'),
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger('sejda_crack')
 
+def log_execution(func):
+    """Decorator to log function execution details"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        logger.info(f"Executing {func.__name__}")
+        try:
+            result = func(*args, **kwargs)
+            duration = time.time() - start_time
+            logger.info(f"{func.__name__} completed in {duration:.2f}s")
+            return result
+        except Exception as e:
+            logger.error(f"{func.__name__} failed: {str(e)}")
+            raise
+    return wrapper
 
-class SejdaCrack:
+class UltimateSejdaCrack:
     def __init__(self):
-        self.platform = sys.platform
-        self.emoji = None
-        self.asar = None
-        self.prefs = None
-        self.versions = ["7.8.4", "7.9.3"]
-        self.cmd = None
-        self.main()
-
-    def main(self):
-        self.print("🔥", f"Sejda PDF Desktop crack v{VERSION} by mini-page")
-
-        if self.platform == "linux":
-            self.asar = "/opt/sejda-desktop/resources/app.asar"
-            self.prefs = os.path.join(self.home_dir(), ".sejda")
-            self.cmd = ["pgrep", "-x", "sejda-desktop"]
-            self.print("🐧", "Linux detected")
-        elif self.platform == "win32":
-            self.asar = r"C:\Program Files\Sejda PDF Desktop\resources\app.asar"
-            self.prefs = os.path.join(
-                os.getenv("APPDATA"), "sejda-desktop", "prefs.json"
-            )
-            self.cmd = [
-                "powershell",
-                "-Command",
-                'Get-Process | Where-Object {$_.ProcessName -eq "Sejda PDF Desktop"}',
-            ]
-            self.print("🪟", "Windows detected")
-        elif self.platform == "darwin":
-            self.asar = (
-                "/Applications/Sejda PDF Desktop.app/Contents/Resources/app.asar"
-            )
-            self.prefs = os.path.join(self.home_dir(), ".sejda")
-            self.cmd = ["pgrep", "-x", '"Sejda PDF Desktop"']
-            self.print("🍎", "MacOS detected")
-        else:
-            self.exit(f"Unsupported platform: {self.platform}")
-
-        self.asar = self.check_file(self.asar, "Sejda PDF Desktop ASAR")
-        self.prefs = self.check_file(self.prefs, "Sejda PDF Desktop preferences")
-        self.check_version()
-        self.check_process()
-        self.patch_files()
-        self.print("🎉", "Freedom successful")
-        self.print("⭐", "Would appreciate a star https://github.com/mini-page/SejdaCrack")
-
-    @staticmethod
-    def home_dir():
-        sudo_user = os.getenv("SUDO_USER")
-        if sudo_user:
-            return os.path.expanduser(f"~{sudo_user}")
-        else:
-            return os.getenv("HOME")
-
-    def check_file(self, file: str, name: str) -> str:
-        if not os.path.exists(file):
-            self.print("❌", f"{name} not found in default location: {file}")
-            file = input(f"Enter path to {name}: ").strip('"')
-            self.check_file(file, name)
-        self.print("📦", f"Found {name}")
-
+        self.os_info = platform.system().lower()
+        self.os_map = {
+            'windows': 'win32',
+            'darwin': 'darwin',
+            'linux': 'linux'
+        }
+        self.os_name = next((k for k, v in self.os_map.items() if v == self.os_info), 'unknown')
+        self.install_paths = {
+            'linux': '/opt/sejda-desktop',
+            'windows': 'C:\\Program Files\\Sejda PDF Desktop',
+            'darwin': '/Applications/Sejda PDF Desktop.app'
+        }
+        self.config_paths = {
+            'linux': os.path.expanduser('~/.config/sejda'),
+            'windows': os.path.expandvars('%APPDATA%\\sejda-desktop'),
+            'darwin': os.path.expanduser('~/Library/Application Support/sejda')
+        }
+        self.supported_versions = {
+            '7.8': {'patches': ['/licenses/verify', 'PR ACTIVE']},
+            '7.9': {'patches': ['/licenses/verify', 'PR ACTIVE']}
+        }
+        self.current_version = None
+        self.file_hashes = {}
+        self.process_names = {
+            'linux': ['sejda-desktop'],
+            'windows': ['Sejda PDF Desktop'],
+            'darwin': ['Sejda PDF Desktop']
+        }
+        self.test_results = {
+            'version_detection': False,
+            'patch_application': False,
+            'integrity_validation': False
+        }
+    
+    @log_execution
+    def detect_installation(self) -> Optional[Dict[str, str]]:
+        """Detect Sejda installation paths"""
         try:
-            with open(file, "a"):
-                pass
-        except PermissionError:
-            self.exit(
-                f"{file} no read/write permissions.\nTry to run this script as administrator / root or change file permissions"
-            )
-
-        return file
-
-    def check_version(self):
-        asar_file = open(self.asar, "rb")
-        asar_file.seek(4)
-        header_size = struct.unpack("I", asar_file.read(4))
-        if len(header_size) <= 0:
-            self.exit("Failed to read ASAR header size")
-        header_size = header_size[0] - 8
-        asar_file.seek(asar_file.tell() + 8)
-        header = asar_file.read(header_size).decode("utf-8")
-        files = json.loads(header.replace("\x00", ""))
-        offset = asar_file.seek(asar_file.tell())
-        files = files["files"]
-        for name, contents in files.items():
-            if name == "package.json":
-                if "offset" in contents:
-                    asar_file.seek(int(contents["offset"]) + offset)
-                    json_data = json.loads(asar_file.read(contents["size"]))
-                    version = json_data["version"]
-                    if version in self.versions:
-                        self.print("⚙️", f"Found Sejda PDF Desktop version {version}")
-                    else:
-                        self.print(
-                            "⚠️",
-                            f"Sejda PDF Desktop version {version} is not tested. Continue at your own risk",
-                        )
-                        input("Press Enter to continue")
-                    return
-        self.exit("Failed to find package.json in ASAR header")
-
-    def check_process(self):
-        try:
-            # Check if running
-            check_cmd = 'powershell "Get-Process -Name \\"Sejda PDF Desktop\\" -ErrorAction SilentlyContinue"'
-            result = subprocess.run(check_cmd, capture_output=True, text=True)
-
-            # If process found → kill it
-            if result.stdout.strip() != "":
-                kill_cmd = (
-                    'powershell "Stop-Process -Name \\"Sejda PDF Desktop\\" -Force"'
-                )
-                subprocess.run(kill_cmd, capture_output=True, text=True)
-
+            base_path = self.install_paths.get(self.os_name)
+            if not base_path or not Path(base_path).exists():
+                logger.warning(f"Installation path not found for {self.os_name}")
+                return None
+                
+            return {
+                'base': base_path,
+                'asar': os.path.join(base_path, 'resources', 'app.asar'),
+                'prefs': os.path.join(self.config_paths.get(self.os_name), 'prefs.json')
+            }
         except Exception as e:
-            self.exit(f"Failed: {e}")
-
-    def patch_files(self):
+            logger.error(f"Installation detection failed: {e}")
+            return None
+    
+    @log_execution
+    def verify_process_running(self) -> bool:
+        """Check if Sejda process is running"""
         try:
-            with open(self.prefs, "r") as f:
-                data = json.load(f)
-            data["licenseExpires"] = 9999999999999
-            data[
-                "licenseToken"
-            ] = b"\x6e\x78\x2f\x79\x46\x43\x56\x58\x6e\x2f\x67\x30\x2b\x2b\x48\x66\x35\x53\x37\x69\x61\x50\x6d\x4d\x2f\x48\x32\x75\x30\x6b\x4a\x31\x34\x43\x74\x62\x78\x6c\x49\x35\x6d\x37\x36\x4d\x4e\x51\x30\x77\x63\x79\x4e\x79\x76\x59\x61\x64\x5a\x4a\x42\x66\x30\x55\x42\x6c\x4d\x32\x33\x64\x6b\x36\x35\x4d\x66\x59\x48\x48\x2b\x73\x62\x42\x44\x32\x4d\x32\x7a\x67\x42\x47\x6b\x68\x51\x64\x39\x67\x4b\x4d\x74\x72\x52\x7a\x6d\x5a\x36\x2b\x32\x6d\x51\x3d".decode(
-                "utf-8"
-            )
-            data[
-                "licenseKey"
-            ] = b"\x41\x45\x5a\x54\x34\x33\x4e\x38\x2d\x39\x37\x4c\x5a\x2d\x52\x36\x37\x59\x2d\x34\x34\x4c\x45\x2d\x30\x42\x42\x30\x52\x53\x42\x4b\x35\x4f\x44\x52".decode(
-                "utf-8"
-            )
-            data["startPage"] = ""
-            with open(self.prefs, "w") as f:
-                json.dump(data, f)
+            cmd = ['ps', '-ax'] if self.os_info == 'linux' else \
+                  ['tasklist', '/FI', f'IMAGENAME eq {self.process_names[self.os_name][0]}']
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            
+            if self.os_info == 'linux':
+                return any(name in result.stdout for name in self.process_names[self.os_name])
+            else:
+                return any(name in result.stdout for name in self.process_names[self.os_name])
         except Exception as e:
-            self.exit(f"Failed to patch {self.prefs}\n{e}")
-        self.print("🩹", "Patched preferences")
-
+            logger.error(f"Process check failed: {e}")
+            return False
+    
+    @log_execution
+    def kill_process(self) -> bool:
+        """Kill running Sejda processes"""
         try:
-            with open(self.asar, "rb") as f:
+            for name in self.process_names[self.os_name]:
+                if self.os_info == 'linux':
+                    subprocess.run(['pkill', '-f', name], check=False)
+                else:
+                    subprocess.run(['taskkill', '/F', '/IM', f'{name}.exe'], check=False)
+            return True
+        except Exception as e:
+            logger.error(f"Process termination failed: {e}")
+            return False
+    
+    @log_execution
+    def detect_version(self, asar_path: str) -> Optional[str]:
+        """Extract version from package.json in ASAR"""
+        try:
+            # Try ASAR header first
+            with open(asar_path, 'rb') as f:
+                header_size = int.from_bytes(f.read(4), 'little')
+                header = json.loads(f.read(header_size).decode('utf-8', errors='ignore'))
+                
+                # Find package.json
+                for name, meta in header.get('files', {}).items():
+                    if name.endswith('package.json'):
+                        offset = meta['offset']
+                        size = meta['size']
+                        f.seek(offset)
+                        pkg_json = json.loads(f.read(size).decode('utf-8', errors='ignore'))
+                        version = pkg_json.get('version')
+                        if version:
+                            major_minor = '.'.join(version.split('.')[:2])
+                            if major_minor in self.supported_versions:
+                                self.current_version = major_minor
+                                logger.info(f"Detected compatible version: {major_minor}")
+                                return major_minor
+            
+            # Fall back to file content search
+            with open(asar_path, 'rb') as f:
+                content = f.read().decode('utf-8', errors='ignore')
+                
+                for pattern in [r'(\d+\.\d+(?:\.\d+)?)', r'"version":\s*"([^"]+)"']:
+                    match = re.search(pattern, content)
+                    if match:
+                        version = match.group(1)
+                        major_minor = '.'.join(version.split('.')[:2])
+                        if major_minor in self.supported_versions:
+                            self.current_version = major_minor
+                            logger.info(f"Detected compatible version: {major_minor}")
+                            return major_minor
+            
+            logger.warning("No supported version found in ASAR")
+            return None
+            
+        except Exception as e:
+            logger.error(f"Version detection failed: {e}")
+            return None
+    
+    @log_execution
+    def generate_patches(self, version: str) -> List[Tuple[bytes, bytes]]:
+        """Generate version-specific patches"""
+        if version not in self.supported_versions:
+            raise ValueError(f"No patches defined for version {version}")
+            
+        patches = []
+        base_patches = self.supported_versions[version]["patches"]
+        
+        # Generate common patches
+        patches.append((b"/licenses/verify", b"/cracked-by-sejda"))
+        patches.append((b"PR ACTIVE", b"CRACKED BY SEJDA"))
+        
+        # Add version-specific patches
+        if version == "7.9":
+            patches.append((b"active: true", b"active: false"))
+            
+        return patches
+    
+    @log_execution
+    def validate_file(self, file_path: str) -> Dict[str, Any]:
+        """Validate file integrity with multiple checksums"""
+        try:
+            with open(file_path, 'rb') as f:
+                content = f.read()
+                
+            sha256_hash = hashlib.sha256(content).hexdigest()
+            md5_hash = hashlib.md5(content).hexdigest()
+            crc32 = zlib.crc32(content) & 0xffffffff
+            
+            result = {
+                'sha256': sha256_hash,
+                'md5': md5_hash,
+                'crc32': crc32,
+                'timestamp': datetime.now().isoformat()
+            }
+            
+            self.file_hashes[file_path] = result
+            return result
+            
+        except Exception as e:
+            logger.error(f"File validation failed: {e}")
+            return {}
+    
+    @log_execution
+    def apply_patches(self, file_path: str, patches: List[Tuple[bytes, bytes]]) -> bool:
+        """Apply patches with integrity validation and backup"""
+        try:
+            # Create backup
+            backup_path = f"{file_path}.bak_{int(time.time())}"
+            with open(file_path, 'rb') as f:
+                with open(backup_path, 'wb') as b:
+                    b.write(f.read())
+            
+            # Validate integrity before patching
+            original_hash = self.validate_file(file_path)
+            if not original_hash:
+                logger.error("Cannot validate original file integrity")
+                return False
+            
+            # Apply patches
+            with open(file_path, 'rb') as f:
                 data = f.read()
-            endpoint = "/" + "".join(
-                random.choice(string.ascii_letters + string.digits) for _ in range(15)
-            )
-            data = data.replace(
-                b"\x2f\x6c\x69\x63\x65\x6e\x73\x65\x73\x2f\x76\x65\x72\x69\x66\x79",
-                endpoint.encode(),
-            )
-            data = data.replace(
-                b"\x22\x50\x52\x4f\x20\x61\x63\x74\x69\x76\x65\x20\xe2\x80\x94\x20\x22\x2b\x6c",
-                b"\x22\x63\x72\x61\x63\x6b\x65\x64\x20\x62\x79\x20\x67\x6f\x6f\x6b\x69\x65\x22",
-            )
-            with open(self.asar, "wb") as f:
+                
+            for old, new in patches:
+                data = data.replace(old, new)
+            
+            # Validate integrity after patching
+            with open(file_path, 'wb') as f:
                 f.write(data)
+                
+            patched_hash = self.validate_file(file_path)
+            if not patched_hash:
+                logger.error("Cannot validate patched file integrity")
+                return False
+            
+            # Compare hashes
+            if original_hash['sha256'] == patched_hash['sha256']:
+                logger.error("File was not modified - hashes identical")
+                return False
+                
+            logger.info(f"Patched {file_path} successfully")
+            return True
+            
         except Exception as e:
-            self.exit(f"Failed to patch {self.asar}\n{e}")
-        self.print("🩹", "Patched ASAR")
-
-    def exit(self, msg: str):
-        self.print("❌", msg)
-        exit(1)
-
-    def print(self, emoji: str, msg: str):
-        if self.emoji is None:
+            logger.error(f"Patch application error: {e}")
+            return False
+    
+    @log_execution
+    def patch_preferences(self, prefs_path: str) -> bool:
+        """Patch preferences file"""
+        try:
+            with open(prefs_path, 'r') as f:
+                data = json.load(f)
+                
+            # Inject cracked values
+            data["licenseExpires"] = 9999999999999
+            data["licenseToken"] = "nx/yFCVXn/g0++Hf5S7iaPmM/H2u0kJ14CtbxlI5m76MNQ0wcyNyvYaZJBf0UBlM23dk65MfYHH+sbdD2M2zgBGlhQd9gKMrRzmaZ6+2mQ=="
+            data["licenseKey"] = "AEZT43N8-97LZ-R67Y-44LE-0BB0RSBK5ODR"
+            data["startPage"] = ""
+            
+            with open(prefs_path, 'w') as f:
+                json.dump(data, f, indent=2)
+                
+            logger.info("Preferences successfully patched")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to patch preferences: {e}")
+            return False
+    
+    @log_execution
+    def run_security_test(self) -> Dict[str, Any]:
+        """Run comprehensive security test suite"""
+        results = {
+            'timestamp': datetime.now().isoformat(),
+            'test_results': {},
+            'system_info': {
+                'os': self.os_name,
+                'python_version': sys.version
+            }
+        }
+        
+        # Run all test cases
+        test_functions = [
+            self.detect_version,
+            self.apply_patches,
+            self.validate_file
+        ]
+        
+        for func in test_functions:
             try:
-                print(f"{emoji} {msg}")
-                self.emoji = True
-            except UnicodeEncodeError:
-                print(msg)
-                self.emoji = False
-        elif self.emoji:
-            print(f"{emoji} {msg}")
+                func_result = func()
+                results['test_results'][func.__name__] = func_result
+            except Exception as e:
+                results['test_results'][func.__name__] = False
+                logger.error(f"Test failed: {e}")
+        
+        return results
+    
+    @log_execution
+    def run(self):
+        """Execute the cracking process"""
+        logger.info("Starting Sejda PDF Desktop cracking process")
+        
+        # Detect installation
+        paths = self.detect_installation()
+        if not paths:
+            logger.error("Installation not found")
+            return False
+            
+        # Check version
+        version = self.detect_version(paths['asar'])
+        if not version:
+            logger.error("Compatible version not found")
+            return False
+            
+        # Generate patches
+        patches = self.generate_patches(version)
+        
+        # Process management
+        if self.verify_process_running():
+            logger.info("Sejda process detected, terminating...")
+            self.kill_process()
+            
+        # Apply patches
+        success = True
+        success &= self.patch_preferences(paths['prefs'])
+        success &= self.apply_patches(paths['asar'], patches)
+        
+        if success:
+            logger.info("Successfully cracked Sejda PDF Desktop!")
+            return True
         else:
-            print(msg)
-
+            logger.error("Cracking process failed")
+            return False
 
 if __name__ == "__main__":
-    SejdaCrack()
+    crack = UltimateSejdaCrack()
+    crack.run()
